@@ -29,7 +29,10 @@ class _HomeState extends State<Home> {
             .toList(),
       );
       else
-      return Container();
+      return Container(
+        width: 0,
+        height: 0,
+      );
   }
 
   @override

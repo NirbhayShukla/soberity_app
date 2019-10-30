@@ -21,6 +21,26 @@ class _NewHabitState extends State<NewHabit> {
     return items;
   }
 
+Widget prefixWidget(){
+if(selected=="Money")
+return Text("₹");
+else
+return Container(
+  width: 0,
+  height: 0,
+);
+}
+
+Widget suffixWidget(){
+if(selected=="Time")
+return Text("hours");
+else
+return Container(
+   width: 0,
+  height: 0,
+);
+}
+
   @override
   void initState() {
     menu = getmenu();
@@ -63,7 +83,8 @@ class _NewHabitState extends State<NewHabit> {
                           name = value;
                         },
                         style: TextStyle(
-                          fontSize: 20
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
                         cursorColor: Colors.redAccent,
@@ -71,6 +92,8 @@ class _NewHabitState extends State<NewHabit> {
                           hintText: "Name",
                           hintStyle: TextStyle(
                             fontSize: 20,
+                            color: Colors.grey[400],
+                            fontWeight: FontWeight.w400
                           )
                         ),
                       ),
@@ -95,13 +118,26 @@ class _NewHabitState extends State<NewHabit> {
                           cost = value;
                         },
                         style: TextStyle(
-                          fontSize: 20
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.center, 
                         cursorColor: Colors.redAccent,
                         decoration: InputDecoration(
                           hintText: "Cost",
                           hintStyle: TextStyle(
+                            fontSize: 20,
+                            color: Colors.grey[400],
+                            fontWeight: FontWeight.w400
+                          ),
+                          prefix: prefixWidget(),
+                          prefixStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                          suffix: suffixWidget(),
+                          suffixStyle: TextStyle(
+                            color: Colors.black,
                             fontSize: 20,
                           )
                         ),
