@@ -158,7 +158,7 @@ return Container(
                       fontWeight: FontWeight.bold),
                 ),
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pop(context,name);
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(25.0),

@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import './newhabit.dart';
 
 class Home extends StatefulWidget {
-  String habit = "";
-  Home();
-  Home.addHabit(this.habit);
   @override
   _HomeState createState() => _HomeState();
 }
@@ -13,22 +10,19 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<String> _habits = [];
 
-  @override
-  void initState() {
-    _habits.add(widget.habit);
-    super.initState();
-  }
-
-  Widget HabitList(){
-    if(_habits.length>0)
-    return ListView(
+  Widget HabitList() {
+    if (_habits.length > 0)
+      return Container(
+        padding: EdgeInsets.all(10),
+        child:ListView(
         children: _habits
-            .map((habit) => Card(
+            .map((habit) => RawMaterialButton(
                   child: Text(habit),
+                  onPressed: (){},
                 ))
             .toList(),
-      );
-      else
+      ),);
+    else
       return Container(
         width: 0,
         height: 0,
@@ -50,12 +44,16 @@ class _HomeState extends State<Home> {
         actions: <Widget>[
           FlatButton(
             child: Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (BuildContext context) => NewHabit(),
                   ));
+                   _habits.add(result);
+                  setState(() {
+                  
+                  });
             },
           ),
           FlatButton(
