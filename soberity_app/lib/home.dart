@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 import './newhabit.dart';
+import './data.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -8,20 +10,29 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<String> _habits = [];
+  List<Data> _habits = [];
 
   Widget HabitList() {
     if (_habits.length > 0)
       return Container(
         padding: EdgeInsets.all(10),
-        child:ListView(
-        children: _habits
-            .map((habit) => RawMaterialButton(
-                  child: Text(habit),
-                  onPressed: (){},
-                ))
-            .toList(),
-      ),);
+        child: ListView(
+          children: _habits
+              .map((habit) => RawMaterialButton(
+                    constraints: BoxConstraints(
+                      minWidth: double.infinity,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(15.0),
+                    ),
+                    elevation: 20,
+                    fillColor: Colors.grey,
+                    child: Text(habit.name),
+                    onPressed: () {},
+                  ))
+              .toList(),
+        ),
+      );
     else
       return Container(
         width: 0,
@@ -41,24 +52,37 @@ class _HomeState extends State<Home> {
             fontSize: 30,
           ),
         ),
+        titleSpacing: 0,
+        leading: Icon(Icons.mood),
         actions: <Widget>[
-          FlatButton(
-            child: Icon(Icons.add),
+          RawMaterialButton(
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 30,
+            ),
             onPressed: () async {
               final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => NewHabit(),
-                  ));
-                   _habits.add(result);
-                  setState(() {
-                  
-                  });
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => NewHabit(),
+                ),
+              ) as Data;
+              if (result.name != null) {
+                _habits.add(result);
+              }
+              setState(() {});
             },
+            constraints: BoxConstraints(maxWidth: 50),
           ),
-          FlatButton(
-            child: Icon(Icons.settings),
+          RawMaterialButton(
+            child: Icon(
+              Icons.settings,
+              color: Colors.white,
+              size: 25,
+            ),
             onPressed: () {},
+            constraints: BoxConstraints(maxWidth: 50),
           )
         ],
       ),
