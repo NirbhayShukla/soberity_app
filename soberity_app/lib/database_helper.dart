@@ -33,12 +33,12 @@ Future<Database>  initializedb() async{
 Directory directory =await getApplicationDocumentsDirectory();
 String path=directory.path+'notes.db';
 
-var notesDatabase = await openDatabase(path,version:1,onCreate:createDb);
-return notesDatabase;
+var habitsDatabase = await openDatabase(path,version:1,onCreate:createDb);
+return habitsDatabase;
   }
 
 void createDb(Database db,int newVersion ) async{
-  await db.execute(' ';)
+  await db.execute('CREATE TABLE habits(colname TEXT,colcost REAL ,colmoney INTEGER , collastinteraction BLOB,colquitdate BLOB,colmaxabstinenceperiod BLOB,colminabstinenceperiod BLOB,colpreviousabstinenceperiod BLOB ,colspent REAL ,colresets INTEGER) ');
 }
 
 Future<Database> get database async{
@@ -52,25 +52,25 @@ if(db == null){
 
 Future<List<Map<String,dynamic>>> getMapList() async{
   Database db=await this.database;
-  var result = await db.query();
+  var result = await db.query('habits');
   return result;
 }
 
 Future<int> insert(Data data) async{
   Database db= await this.database;
-  var result = await db.insert(table, data.toMap());
+  var result = await db.insert('habits', data.toMap());
   return result;
 }
 
 Future<int> update(Data data) async{
   var db=await this.database;
-  var result = await db.update(table, data.toMap(),where: );
+  var result = await db.update('habits', data.toMap(),where:'colname = ?' ,whereArgs: [data.name]);
   return result;
 }
 
-Future<int> delete(Data data) async{
+Future<int> delete(String name) async{
   Database db = await this.database;
-  int result= await db.rawDelete(sql);
+  int result= await db.delete('habits',where:'colname = ?',whereArgs:[name]);
   return result;
 }
 

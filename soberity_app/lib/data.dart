@@ -1,7 +1,7 @@
 class Data {
   String name;
   double cost;
-  bool money;
+  int money;
   DateTime quitdate;
   DateTime lastinteraction;
   Duration maxabstinenceperiod;
@@ -23,30 +23,29 @@ class Data {
     if (name != null) {
       map['name'] = name;
     }
-   map['cost']=cost;
-   map['money']=money;
-   map['quitdate']=quitdate;
-   map['lastinteraction']=lastinteraction;
-   map['minabstinenceperiod']=minabstinenceperiod;
-   map['maxabstinenceperiod']=maxabstinenceperiod;
-   map['previousabstinenceperiod']=previousabstinenceperiod;
-   map['resets']=resets;
-   map['spent']=spent;
+    map['cost'] = cost;
+    map['money'] = money;
+    map['quitdate'] = quitdate;
+    map['lastinteraction'] = lastinteraction;
+    map['minabstinenceperiod'] = minabstinenceperiod;
+    map['maxabstinenceperiod'] = maxabstinenceperiod;
+    map['previousabstinenceperiod'] = previousabstinenceperiod;
+    map['resets'] = resets;
+    map['spent'] = spent;
 
     return map;
   }
 
-  Data.fromMap(Map<String, dynamic> map){
-     this.name=map['name'];
-     this.cost=map['cost'];
-     this.money=map['money'];
-     this.quitdate=map['quitdate'];
-     this.lastinteraction=map['lastinteraction'];
-     this.minabstinenceperiod=map['minabstinenceperiod'];
-     this.maxabstinenceperiod=map['maxabstinenceperiod'];
-     this.previousabstinenceperiod=map['previousabstinenceperiod'];
-     this.resets=map['resets'];
-     this.spent=map['spent'];
-     
+  Data.fromMap(Map<String, dynamic> map) {
+    this.name = map['name'];
+    this.cost = map['cost'];
+    this.money = map['money'];
+    this.quitdate = map['quitdate'];
+    this.lastinteraction = map['lastinteraction'];
+    this.minabstinenceperiod = map['minabstinenceperiod'];
+    this.maxabstinenceperiod = map['maxabstinenceperiod'];
+    this.previousabstinenceperiod = map['previousabstinenceperiod'];
+    this.resets = map['resets'];
+    this.spent = map['spent'];
   }
 }

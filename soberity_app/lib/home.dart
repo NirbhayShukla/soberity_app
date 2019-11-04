@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'dart:async';
+import 'package:soberity_app/database_helper.dart';
+import 'package:sqflite/sqflite.dart';
 
 import './newhabit.dart';
 import './data.dart';
@@ -12,6 +15,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<Data> _habits = [];
+  int count = 0;
+  DataBaseHelper dbhelper = DataBaseHelper();
 
   Widget abstinenceTime(DateTime lastinteraction) {
     DateTime current = DateTime.now();
@@ -24,11 +29,11 @@ class _HomeState extends State<Home> {
   }
 
   Widget progressbar(DateTime lastinteraction) {
-     DateTime current = DateTime.now();
+    DateTime current = DateTime.now();
     Duration abstime = current.difference(lastinteraction);
     int finalresult = abstime.inHours;
-    double barprogress = finalresult/720;
-    var percent = (barprogress*100).toStringAsFixed(2);
+    double barprogress = finalresult / 720;
+    var percent = (barprogress * 100).toStringAsFixed(2);
     return CircularPercentIndicator(
       radius: 85.0,
       lineWidth: 8.0,
@@ -68,7 +73,11 @@ class _HomeState extends State<Home> {
                     borderRadius: new BorderRadius.circular(5.0),
                   ),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Habitdetails(habit)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                Habitdetails(habit)));
                   },
                   fillColor: Colors.white,
                   child: Row(
