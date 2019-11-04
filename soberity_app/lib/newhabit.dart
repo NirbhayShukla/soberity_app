@@ -193,6 +193,7 @@ class _NewHabitState extends State<NewHabit> {
                                 selectedtime.hour,
                                 selectedtime.minute,
                                 newhabit.lastinteraction.second);
+                                newhabit.quitdate = newhabit.lastinteraction;
                           }
                           dateformat = DateFormat.yMMMd()
                               .format(newhabit.lastinteraction);
