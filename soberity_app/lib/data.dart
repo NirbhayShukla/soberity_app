@@ -1,3 +1,5 @@
+
+
 class Data {
   String name;
   double cost;
@@ -11,25 +13,25 @@ class Data {
   double spent;
   Data({this.name, this.cost, this.lastinteraction}) {
     quitdate = DateTime.now();
-    maxabstinenceperiod = null;
-    minabstinenceperiod = null;
-    previousabstinenceperiod = null;
+    maxabstinenceperiod = Duration(hours: 0);
+    minabstinenceperiod = Duration(hours: 0);
+    previousabstinenceperiod = Duration(hours: 0);
     resets = 0;
     spent = 0;
+    money = 1;
   }
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
-    if (name != null) {
-      map['name'] = name;
-    }
+
+    map['name'] = name;
     map['cost'] = cost;
     map['money'] = money;
-    map['quitdate'] = quitdate;
-    map['lastinteraction'] = lastinteraction;
-    map['minabstinenceperiod'] = minabstinenceperiod;
-    map['maxabstinenceperiod'] = maxabstinenceperiod;
-    map['previousabstinenceperiod'] = previousabstinenceperiod;
+    map['quitdate'] = quitdate.toString();
+    map['lastinteraction'] = lastinteraction.toString();
+    map['minabstinenceperiod'] = minabstinenceperiod.inSeconds;
+    map['maxabstinenceperiod'] = maxabstinenceperiod.inSeconds;
+    map['previousabstinenceperiod'] = previousabstinenceperiod.inSeconds;
     map['resets'] = resets;
     map['spent'] = spent;
 
@@ -40,11 +42,14 @@ class Data {
     this.name = map['name'];
     this.cost = map['cost'];
     this.money = map['money'];
-    this.quitdate = map['quitdate'];
-    this.lastinteraction = map['lastinteraction'];
-    this.minabstinenceperiod = map['minabstinenceperiod'];
-    this.maxabstinenceperiod = map['maxabstinenceperiod'];
-    this.previousabstinenceperiod = map['previousabstinenceperiod'];
+    this.quitdate = DateTime.parse(map['quitdate']);
+    this.lastinteraction = DateTime.parse(map['lastinteraction']);
+    this.minabstinenceperiod =
+        new Duration(seconds: map['minabstinenceperiod']);
+    this.maxabstinenceperiod =
+        new Duration(seconds: map['maxabstinenceperiod']);
+    this.previousabstinenceperiod =
+        new Duration(seconds: map['previousabstinenceperiod']);
     this.resets = map['resets'];
     this.spent = map['spent'];
   }

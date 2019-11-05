@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+
 import './data.dart';
 
 class DataBaseHelper {
@@ -33,12 +34,12 @@ Future<Database>  initializedb() async{
 Directory directory =await getApplicationDocumentsDirectory();
 String path=directory.path+'notes.db';
 
-var habitsDatabase = await openDatabase(path,version:1,onCreate:createDb);
+var habitsDatabase = await openDatabase(path,version:2,onCreate:createDb);
 return habitsDatabase;
   }
 
 void createDb(Database db,int newVersion ) async{
-  await db.execute('CREATE TABLE habits(colname TEXT,colcost REAL ,colmoney INTEGER , collastinteraction BLOB,colquitdate BLOB,colmaxabstinenceperiod BLOB,colminabstinenceperiod BLOB,colpreviousabstinenceperiod BLOB ,colspent REAL ,colresets INTEGER) ');
+  await db.execute("CREATE TABLE habits($name TEXT, $cost REAL , $money INTEGER , $quitdate TEXT, $lastinteraction TEXT, $minabstinenceperiod INTEGER, $maxabstinenceperiod INTEGER, $previousabstinenceperiod INTEGER , $resets INTEGER, $spent REAL ) ");
 }
 
 Future<Database> get database async{
@@ -64,14 +65,25 @@ Future<int> insert(Data data) async{
 
 Future<int> update(Data data) async{
   var db=await this.database;
-  var result = await db.update('habits', data.toMap(),where:'colname = ?' ,whereArgs: [data.name]);
+  var result = await db.update('habits', data.toMap(),where:'name = ?' ,whereArgs: [data.name]);
   return result;
 }
 
 Future<int> delete(String name) async{
   Database db = await this.database;
-  int result= await db.delete('habits',where:'colname = ?',whereArgs:[name]);
+  int result= await db.delete('habits',where:'name = ?',whereArgs:[name]);
   return result;
+}
+
+Future<List<Data>> getHabitlist() async{
+  var maplist = await getMapList();
+  int count = maplist.length;
+
+  List<Data> habitlist = List<Data>();
+  for(int i=0;i<count;i++){
+    habitlist.add(Data.fromMap(maplist[i]));
+  }
+  return habitlist;
 }
 
 }

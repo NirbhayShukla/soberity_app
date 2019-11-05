@@ -112,7 +112,10 @@ class _NewHabitState extends State<NewHabit> {
                         items: menu,
                         onChanged: (String value) {
                           selected = value;
-
+                          if (value == "Money")
+                            newhabit.money = 1;
+                          else
+                            newhabit.money = 0;
                           setState(() {});
                         },
                       ),
@@ -193,7 +196,7 @@ class _NewHabitState extends State<NewHabit> {
                                 selectedtime.hour,
                                 selectedtime.minute,
                                 newhabit.lastinteraction.second);
-                                newhabit.quitdate = newhabit.lastinteraction;
+                            newhabit.quitdate = newhabit.lastinteraction;
                           }
                           dateformat = DateFormat.yMMMd()
                               .format(newhabit.lastinteraction);

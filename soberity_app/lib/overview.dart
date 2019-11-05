@@ -66,11 +66,33 @@ class _OverviewState extends State<Overview> {
     );
   }
 
-  Widget currentsavings(DateTime lastinteraction) {
+  Widget currentsavings(Data habit) {
     DateTime current = DateTime.now();
-    Duration abstime = current.difference(lastinteraction);
+    Duration abstime = current.difference(habit.lastinteraction);
+    double currentsavings = abstime.inHours / 24 * habit.cost;
+    String result = '';
+    if (habit.money == 1)
+      result = "₹ " + currentsavings.toStringAsFixed(0);
+    else
+      result = currentsavings.toStringAsFixed(0) + " hours";
     return Text(
-      abstime.inHours.toString(),
+      result,
+      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget alltimesavings(Data habit) {
+    String result;
+    DateTime current = DateTime.now();
+    Duration abstime = current.difference(habit.lastinteraction);
+    double currentsavings = abstime.inHours / 24 * habit.cost;
+    if (habit.money == 1)
+      result = "₹ " + (habit.spent + currentsavings).toStringAsFixed(0);
+    else
+      result = (habit.spent + currentsavings).toStringAsFixed(0) + " hours";
+
+    return Text(
+      result,
       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
     );
   }
@@ -82,6 +104,21 @@ class _OverviewState extends State<Overview> {
       constraints:
           BoxConstraints(maxHeight: 1, minHeight: 1, minWidth: double.infinity),
     );
+  }
+
+  void updatehabit(Data habit) {
+    DateTime current = DateTime.now();
+    Duration abstime = current.difference(habit.lastinteraction);
+    double currentsavings = abstime.inHours / 24 * habit.cost;
+
+    habit.resets = habit.resets + 1;
+    habit.spent = habit.spent + currentsavings;
+    habit.previousabstinenceperiod = abstime;
+    habit.lastinteraction = DateTime.now();
+    if (habit.maxabstinenceperiod.compareTo(abstime) < 0)
+      habit.maxabstinenceperiod = abstime;
+    if (habit.minabstinenceperiod.compareTo(abstime) > 0)
+      habit.minabstinenceperiod = abstime;
   }
 
   @override
@@ -132,7 +169,7 @@ class _OverviewState extends State<Overview> {
             padding: EdgeInsets.all(3),
           ),
           Center(
-            child: currentsavings(habit.lastinteraction),
+            child: currentsavings(habit),
           ),
           Padding(
             padding: EdgeInsets.all(3),
@@ -146,12 +183,7 @@ class _OverviewState extends State<Overview> {
           Padding(
             padding: EdgeInsets.all(3),
           ),
-          Center(
-            child: Text(
-              habit.spent.toString(),
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
+          Center(child: alltimesavings(habit)),
           borderline(),
           TableCalendar(
             calendarController: controller,
@@ -166,6 +198,7 @@ class _OverviewState extends State<Overview> {
                 selectedColor: Colors.redAccent),
           ),
           RawMaterialButton(
+            constraints: BoxConstraints(minHeight: 50),
             fillColor: Colors.redAccent,
             elevation: 0,
             splashColor: Colors.transparent,
@@ -175,14 +208,14 @@ class _OverviewState extends State<Overview> {
               borderRadius: new BorderRadius.circular(25.0),
             ),
             onPressed: () {
-              habit.lastinteraction = DateTime.now();
+              updatehabit(habit);   
               setState(() {});
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Icon(Icons.restore, color: Colors.white),
-                Text("RESET TIMER",
+                Text("  RESET TIMER",
                     style: TextStyle(fontSize: 15, color: Colors.white))
               ],
             ),

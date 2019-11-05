@@ -8,7 +8,7 @@ class Habitdetails extends StatelessWidget {
   final Data habit;
 
   Habitdetails(this.habit);
-  
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -18,6 +18,20 @@ class Habitdetails extends StatelessWidget {
           title: Text(habit.name,
               style: TextStyle(fontFamily: 'Milkshake', fontSize: 25)),
           centerTitle: true,
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(right: 15),
+              child: GestureDetector(
+                child: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+                onTap: () {
+                  Navigator.pop(context,true);
+                },
+              ),
+            )
+          ],
           bottom: TabBar(
             tabs: <Widget>[
               Tab(

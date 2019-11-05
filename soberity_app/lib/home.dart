@@ -72,12 +72,17 @@ class _HomeState extends State<Home> {
                   shape: RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(5.0),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                Habitdetails(habit)));
+                  onPressed: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => Habitdetails(habit),
+                      ),
+                    ) as bool;
+                    if (result == true) {
+                      _habits.remove(habit);
+                      deletehabit(context, habit);
+                    }
                   },
                   fillColor: Colors.white,
                   child: Row(
@@ -121,6 +126,36 @@ class _HomeState extends State<Home> {
       );
   }
 
+  void updatehabitlist() {
+    final Future<Database> dbfuture = dbhelper.initializedb();
+    dbfuture.then((db) {
+      Future<List<Data>> habitlistfuture = dbhelper.getHabitlist();
+      habitlistfuture.then((habitlist) {
+        setState(() {
+          this._habits = habitlist;
+          this.count = habitlist.length;
+        });
+      });
+    });
+  }
+
+  void savehabit(Data data) async {
+    int result = await dbhelper.insert(data);
+    print(result);
+  }
+
+  void deletehabit(BuildContext context, Data habit) async {
+    int result = await dbhelper.delete(habit.name);
+    updatehabitlist();
+  }
+
+  @override
+  void initState() {
+    if (_habits == null) _habits = List<Data>();
+    updatehabitlist();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -151,6 +186,7 @@ class _HomeState extends State<Home> {
               ) as Data;
               if (result.name != null) {
                 _habits.add(result);
+                savehabit(result);
               }
               setState(() {});
             },
@@ -172,11 +208,36 @@ class _HomeState extends State<Home> {
         child: ListView(
           children: <Widget>[
             Container(
-              constraints:
-                  BoxConstraints(minHeight: 50, minWidth: double.infinity),
+              padding: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(color: Colors.grey, blurRadius: 2)
+                  ]),
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text("Quote of the day",
+                      style: TextStyle(fontSize: 19, color: Colors.grey)),
+                  Padding(
+                    padding: EdgeInsets.all(3),
+                  ),
+                  Text(
+                      "If you don't like how things are , change it! You're not a tree",
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+                  Padding(
+                    padding: EdgeInsets.all(3),
+                  ),
+                  Text("Jim Rohn",
+                      style: TextStyle(color: Colors.grey, fontSize: 10))
+                ],
+              ),
             ),
             Padding(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(12),
               child: Text(
                 "I commit to quit :",
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),

@@ -67,7 +67,8 @@ Container borderline(){
   @override
   void initState() {
     habit = widget.habit;
-    if(habit.maxabstinenceperiod==null)
+    Duration zero = Duration(hours: 0);
+    if(habit.maxabstinenceperiod.compareTo(zero)==0)
     {
     habit.maxabstinenceperiod = DateTime.now().difference(habit.lastinteraction);
     habit.minabstinenceperiod= DateTime.now().difference(habit.lastinteraction);
