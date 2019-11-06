@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import './data.dart';
+import 'package:soberity_app/database/data.dart';
 
 class NewHabit extends StatefulWidget {
   @override
@@ -9,6 +9,7 @@ class NewHabit extends StatefulWidget {
 }
 
 class _NewHabitState extends State<NewHabit> {
+
   Data newhabit;
   String selected;
   String dateformat;
@@ -24,6 +25,7 @@ class _NewHabitState extends State<NewHabit> {
     return items;
   }
 
+//To display ruppee symbol as prefix
   Widget prefixWidget() {
     if (selected == "Money")
       return Text("₹");
@@ -34,6 +36,7 @@ class _NewHabitState extends State<NewHabit> {
       );
   }
 
+//To display hours as suffix
   Widget suffixWidget() {
     if (selected == "Time")
       return Text("hours");
@@ -44,6 +47,7 @@ class _NewHabitState extends State<NewHabit> {
       );
   }
 
+
   @override
   void initState() {
     menu = getmenu();
@@ -52,6 +56,7 @@ class _NewHabitState extends State<NewHabit> {
     dateformat = DateFormat.yMMMd().format(newhabit.lastinteraction);
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +125,7 @@ class _NewHabitState extends State<NewHabit> {
                         },
                       ),
                       TextField(
+                        keyboardType: TextInputType.number,
                         onChanged: (String value) {
                           newhabit.cost = double.parse(value);
                         },
@@ -219,6 +225,20 @@ class _NewHabitState extends State<NewHabit> {
                       fontWeight: FontWeight.bold),
                 ),
                 onPressed: () {
+                  if(newhabit.name=="" ||newhabit.cost==0.0)
+                  showDialog(
+                      context: context, builder: (BuildContext context) {
+                       return AlertDialog(
+                         title: Text("Fill Completely"),
+                        actions: <Widget>[
+                          FlatButton(child: Text("OK"),onPressed: (){
+                            Navigator.pop(context);
+                          },),
+
+                        ],
+                       );
+                      },);
+                      else
                   Navigator.pop(context, newhabit);
                 },
                 shape: RoundedRectangleBorder(

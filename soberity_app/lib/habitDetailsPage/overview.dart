@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import './data.dart';
+import 'package:soberity_app/database/data.dart';
 
 class Overview extends StatefulWidget {
   final Data habit;
@@ -17,15 +17,7 @@ class _OverviewState extends State<Overview> {
   Data habit;
   CalendarController controller;
 
-  Text currentabstime(DateTime lastinteraction) {
-    DateTime current = DateTime.now();
-    Duration abstime = current.difference(lastinteraction);
-    return Text(
-      abstime.inHours.toString() + " hours",
-      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-    );
-  }
-
+//To show circular progress bar
   Widget progressbar(DateTime lastinteraction) {
     DateTime current = DateTime.now();
     Duration abstime = current.difference(lastinteraction);
@@ -56,6 +48,7 @@ class _OverviewState extends State<Overview> {
     );
   }
 
+//To calculate current abstinence time
   Widget abstinenceTime(DateTime lastinteraction) {
     DateTime current = DateTime.now();
     Duration abstime = current.difference(lastinteraction);
@@ -66,6 +59,7 @@ class _OverviewState extends State<Overview> {
     );
   }
 
+//To calculate and return current savings
   Widget currentsavings(Data habit) {
     DateTime current = DateTime.now();
     Duration abstime = current.difference(habit.lastinteraction);
@@ -81,6 +75,7 @@ class _OverviewState extends State<Overview> {
     );
   }
 
+//To calculate and return all time savings
   Widget alltimesavings(Data habit) {
     String result;
     DateTime current = DateTime.now();
@@ -97,6 +92,7 @@ class _OverviewState extends State<Overview> {
     );
   }
 
+//Widget which acts as border
   Container borderline() {
     return Container(
       margin: EdgeInsets.all(15),
@@ -106,13 +102,14 @@ class _OverviewState extends State<Overview> {
     );
   }
 
+//To modify habit details
   void updatehabit(Data habit) {
     DateTime current = DateTime.now();
     Duration abstime = current.difference(habit.lastinteraction);
-    double currentsavings = abstime.inHours / 24 * habit.cost;
+    double currentsaving = abstime.inHours / 24 * habit.cost;
 
     habit.resets = habit.resets + 1;
-    habit.spent = habit.spent + currentsavings;
+    habit.spent = habit.spent + currentsaving;
     habit.previousabstinenceperiod = abstime;
     habit.lastinteraction = DateTime.now();
     if (habit.maxabstinenceperiod.compareTo(abstime) < 0)
@@ -197,29 +194,48 @@ class _OverviewState extends State<Overview> {
                 todayColor: Colors.red[100],
                 selectedColor: Colors.redAccent),
           ),
-          RawMaterialButton(
-            constraints: BoxConstraints(minHeight: 50),
-            fillColor: Colors.redAccent,
-            elevation: 0,
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            highlightElevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(25.0),
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: RawMaterialButton(
+              constraints: BoxConstraints(minHeight: 50),
+              fillColor: Colors.redAccent,
+              elevation: 0,
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              highlightElevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(25.0),
+              ),
+              onPressed: () {
+                updatehabit(habit);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Updated !"),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text("OK"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+                setState(() {});
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.restore, color: Colors.white),
+                  Text("  RESET TIMER",
+                      style: TextStyle(fontSize: 15, color: Colors.white))
+                ],
+              ),
             ),
-            onPressed: () {
-              updatehabit(habit);   
-              setState(() {});
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(Icons.restore, color: Colors.white),
-                Text("  RESET TIMER",
-                    style: TextStyle(fontSize: 15, color: Colors.white))
-              ],
-            ),
-          )
+          ),
         ],
       ),
     );

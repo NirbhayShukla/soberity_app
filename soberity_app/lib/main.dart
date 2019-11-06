@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './home.dart';
+import 'homePage/home.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -10,13 +11,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-/*Widget selection(){
-  if(seen==true)
-  return Home();
-  else
-  return IntroScreen();
-}*/
-  bool seen= true;
+
  @override
   Widget build(BuildContext context) {
     return MaterialApp(

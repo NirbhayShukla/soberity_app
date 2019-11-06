@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'dart:async';
-import 'package:soberity_app/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 
-import './newhabit.dart';
-import './data.dart';
-import './habitdetails.dart';
+import 'package:soberity_app/database/database_helper.dart';
+import 'package:soberity_app/newHabitPage/newhabit.dart';
+import 'package:soberity_app/database/data.dart';
+import 'package:soberity_app/habitDetailsPage/habitdetails.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -14,10 +14,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
   List<Data> _habits = [];
   int count = 0;
   DataBaseHelper dbhelper = DataBaseHelper();
 
+
+//To calculate and return abstinence time
   Widget abstinenceTime(DateTime lastinteraction) {
     DateTime current = DateTime.now();
     Duration abstime = current.difference(lastinteraction);
@@ -28,6 +31,8 @@ class _HomeState extends State<Home> {
     );
   }
 
+
+//To show circular progress bar
   Widget progressbar(DateTime lastinteraction) {
     DateTime current = DateTime.now();
     Duration abstime = current.difference(lastinteraction);
@@ -58,6 +63,8 @@ class _HomeState extends State<Home> {
     );
   }
 
+
+//To display the list of habits
   Widget habitList() {
     if (_habits.length > 0)
       return Column(
@@ -126,6 +133,8 @@ class _HomeState extends State<Home> {
       );
   }
 
+
+//TO modigy habit details
   void updatehabitlist() {
     final Future<Database> dbfuture = dbhelper.initializedb();
     dbfuture.then((db) {
@@ -139,15 +148,21 @@ class _HomeState extends State<Home> {
     });
   }
 
+
+//To save habit in database
   void savehabit(Data data) async {
     int result = await dbhelper.insert(data);
     print(result);
   }
 
+
+//To delete habit from database
   void deletehabit(BuildContext context, Data habit) async {
     int result = await dbhelper.delete(habit.name);
+    print(result);
     updatehabitlist();
   }
+
 
   @override
   void initState() {
@@ -155,6 +170,7 @@ class _HomeState extends State<Home> {
     updatehabitlist();
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {

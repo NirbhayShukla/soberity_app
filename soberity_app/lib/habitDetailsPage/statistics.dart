@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import './data.dart';
+import 'package:soberity_app/database/data.dart';
 
 class Statistics extends StatefulWidget {
   final Data habit;
@@ -31,48 +31,60 @@ class _StatisticsState extends State<Statistics> {
           ),
         ),
         Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                "$title",
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "$title",
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
-              Padding(
-                padding: EdgeInsets.all(5),
-              ),
-              Text(
-                value,
-                style: TextStyle(color: Colors.grey[700]),
-              )
-            ],
-          ),
-        
+            ),
+            Padding(
+              padding: EdgeInsets.all(5),
+            ),
+            Text(
+              value,
+              style: TextStyle(color: Colors.grey[700]),
+            )
+          ],
+        ),
       ],
     );
   }
 
-Container borderline(){
-  return Container(
-            color: Colors.grey[200],
-            constraints: BoxConstraints(
-                maxHeight: 1, minHeight: 1, minWidth: double.infinity),
-          );
-}
+  Widget wasted(habit) {
+    String spent = (habit.cost * habit.resets).toString();
+    if (habit.money == 1) {
+      spent = "₹ " + spent;
+      return details(Icons.attach_money, "Money wasted", spent);
+    } else {
+      spent = spent + " hours";
+      return details(Icons.timer, "Time wasted", spent);
+    }
+  }
+
+  Container borderline() {
+    return Container(
+      color: Colors.grey[200],
+      constraints:
+          BoxConstraints(maxHeight: 1, minHeight: 1, minWidth: double.infinity),
+    );
+  }
 
   @override
   void initState() {
     habit = widget.habit;
     Duration zero = Duration(hours: 0);
-    if(habit.maxabstinenceperiod.compareTo(zero)==0)
-    {
-    habit.maxabstinenceperiod = DateTime.now().difference(habit.lastinteraction);
-    habit.minabstinenceperiod= DateTime.now().difference(habit.lastinteraction);
-    habit.previousabstinenceperiod=DateTime.now().difference(habit.lastinteraction);
+    if (habit.maxabstinenceperiod.compareTo(zero) == 0) {
+      habit.maxabstinenceperiod =
+          DateTime.now().difference(habit.lastinteraction);
+      habit.minabstinenceperiod =
+          DateTime.now().difference(habit.lastinteraction);
+      habit.previousabstinenceperiod =
+          DateTime.now().difference(habit.lastinteraction);
     }
     super.initState();
   }
@@ -85,20 +97,21 @@ Container borderline(){
         children: <Widget>[
           details(Icons.date_range, "The day you quit",
               DateFormat.yMMMEd().format(habit.quitdate)),
-              borderline(),
+          borderline(),
           details(Icons.hourglass_full, "Max abstinence time",
               habit.maxabstinenceperiod.inHours.toString() + " hours"),
-
-              borderline(),
+          borderline(),
           details(Icons.hourglass_empty, "Min abstinence time",
               habit.minabstinenceperiod.inHours.toString() + " hours"),
-              borderline(),
+          borderline(),
           details(Icons.watch_later, "Previous abstinence time",
               habit.previousabstinenceperiod.inHours.toString() + " hours"),
-              borderline(),
+          borderline(),
           details(Icons.settings_backup_restore, "Number of resets",
               habit.resets.toString()),
-              borderline(),
+          borderline(),
+          wasted(habit),
+          borderline(),
         ],
       ),
     );

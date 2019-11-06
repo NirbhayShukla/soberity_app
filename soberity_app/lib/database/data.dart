@@ -1,5 +1,3 @@
-
-
 class Data {
   String name;
   double cost;
@@ -45,11 +43,11 @@ class Data {
     this.quitdate = DateTime.parse(map['quitdate']);
     this.lastinteraction = DateTime.parse(map['lastinteraction']);
     this.minabstinenceperiod =
-        new Duration(seconds: map['minabstinenceperiod']);
+        new Duration(seconds: int.parse(map['minabstinenceperiod']));
     this.maxabstinenceperiod =
-        new Duration(seconds: map['maxabstinenceperiod']);
+        new Duration(seconds: int.parse(map['maxabstinenceperiod']));
     this.previousabstinenceperiod =
-        new Duration(seconds: map['previousabstinenceperiod']);
+        new Duration(seconds: int.parse(map['previousabstinenceperiod']));
     this.resets = map['resets'];
     this.spent = map['spent'];
   }

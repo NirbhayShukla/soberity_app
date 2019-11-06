@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
-import './data.dart';
+import 'package:soberity_app/database/data.dart';
 
 class DataBaseHelper {
   static DataBaseHelper dbhelper;
