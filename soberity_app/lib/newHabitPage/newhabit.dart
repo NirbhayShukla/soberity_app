@@ -52,8 +52,8 @@ class _NewHabitState extends State<NewHabit> {
   void initState() {
     menu = getmenu();
     selected = menu[0].value;
-    newhabit = Data(name: '', cost: 0, lastinteraction: DateTime.now());
-    dateformat = DateFormat.yMMMd().format(newhabit.lastinteraction);
+    newhabit = Data('',0, "");
+    dateformat = DateFormat.yMMMd().format(DateTime.parse(newhabit.lastinteraction));
     super.initState();
   }
 
@@ -186,26 +186,26 @@ class _NewHabitState extends State<NewHabit> {
                             firstDate: DateTime(2018),
                           );
                           if (selecteddate != null) {
-                            newhabit.lastinteraction = selecteddate;
+                            newhabit.lastinteraction = selecteddate.toString();
                           }
                           final selectedtime = await showTimePicker(
                             context: context,
                             initialTime: TimeOfDay(
-                                hour: newhabit.lastinteraction.hour,
-                                minute: newhabit.lastinteraction.minute),
+                                hour: DateTime.parse(newhabit.lastinteraction).hour,
+                                minute: DateTime.parse(newhabit.lastinteraction).minute),
                           );
                           if (selectedtime != null) {
                             newhabit.lastinteraction = DateTime(
-                                newhabit.lastinteraction.year,
-                                newhabit.lastinteraction.month,
-                                newhabit.lastinteraction.day,
+                                DateTime.parse(newhabit.lastinteraction).year,
+                                DateTime.parse(newhabit.lastinteraction).month,
+                                DateTime.parse(newhabit.lastinteraction).day,
                                 selectedtime.hour,
                                 selectedtime.minute,
-                                newhabit.lastinteraction.second);
+                                DateTime.parse(newhabit.lastinteraction).second).toString();
                             newhabit.quitdate = newhabit.lastinteraction;
                           }
                           dateformat = DateFormat.yMMMd()
-                              .format(newhabit.lastinteraction);
+                              .format(DateTime.parse(newhabit.lastinteraction));
                           setState(() {});
                         },
                       )

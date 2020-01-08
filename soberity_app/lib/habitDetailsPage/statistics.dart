@@ -78,13 +78,13 @@ class _StatisticsState extends State<Statistics> {
   void initState() {
     habit = widget.habit;
     Duration zero = Duration(hours: 0);
-    if (habit.maxabstinenceperiod.compareTo(zero) == 0) {
+    if (habit.maxabstinenceperiod.compareTo(zero.inSeconds) == 0) {
       habit.maxabstinenceperiod =
-          DateTime.now().difference(habit.lastinteraction);
+          DateTime.now().difference(DateTime.parse(habit.lastinteraction)).inSeconds;
       habit.minabstinenceperiod =
-          DateTime.now().difference(habit.lastinteraction);
+          DateTime.now().difference(DateTime.parse(habit.lastinteraction)).inSeconds;
       habit.previousabstinenceperiod =
-          DateTime.now().difference(habit.lastinteraction);
+          DateTime.now().difference(DateTime.parse(habit.lastinteraction)).inSeconds;
     }
     super.initState();
   }
@@ -96,23 +96,23 @@ class _StatisticsState extends State<Statistics> {
       child: ListView(
         children: <Widget>[
           details(Icons.date_range, "The day you quit",
-              DateFormat.yMMMEd().format(habit.quitdate)),
+              DateFormat.yMMMEd().format(DateTime.parse(habit.quitdate)),),
           borderline(),
           details(Icons.hourglass_full, "Max abstinence time",
-              habit.maxabstinenceperiod.inHours.toString() + " hours"),
+              habit.maxabstinenceperiod.toString() + " hours"),
           borderline(),
           details(Icons.hourglass_empty, "Min abstinence time",
-              habit.minabstinenceperiod.inHours.toString() + " hours"),
+              habit.minabstinenceperiod.toString() + " hours"),
           borderline(),
           details(Icons.watch_later, "Previous abstinence time",
-              habit.previousabstinenceperiod.inHours.toString() + " hours"),
+              habit.previousabstinenceperiod.toString() + " hours"),
           borderline(),
           details(Icons.settings_backup_restore, "Number of resets",
               habit.resets.toString()),
           borderline(),
           wasted(habit),
           borderline(),
-        ],
+          ],
       ),
     );
   }

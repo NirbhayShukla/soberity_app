@@ -14,11 +14,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   List<Data> _habits = [];
   int count = 0;
   DataBaseHelper dbhelper = DataBaseHelper();
-
 
 //To calculate and return abstinence time
   Widget abstinenceTime(DateTime lastinteraction) {
@@ -30,7 +28,6 @@ class _HomeState extends State<Home> {
       style: TextStyle(fontWeight: FontWeight.bold),
     );
   }
-
 
 //To show circular progress bar
   Widget progressbar(DateTime lastinteraction) {
@@ -62,7 +59,6 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
 
 //To display the list of habits
   Widget habitList() {
@@ -115,10 +111,10 @@ class _HomeState extends State<Home> {
                               color: Colors.grey,
                             ),
                           ),
-                          abstinenceTime(habit.lastinteraction)
+                          abstinenceTime(DateTime.parse(habit.lastinteraction))
                         ],
                       ),
-                      progressbar(habit.lastinteraction),
+                      progressbar(DateTime.parse(habit.lastinteraction)),
                     ],
                   ),
                 ),
@@ -132,7 +128,6 @@ class _HomeState extends State<Home> {
         height: 0,
       );
   }
-
 
 //TO modigy habit details
   void updatehabitlist() {
@@ -148,13 +143,11 @@ class _HomeState extends State<Home> {
     });
   }
 
-
 //To save habit in database
   void savehabit(Data data) async {
     int result = await dbhelper.insert(data);
     print(result);
   }
-
 
 //To delete habit from database
   void deletehabit(BuildContext context, Data habit) async {
@@ -163,14 +156,12 @@ class _HomeState extends State<Home> {
     updatehabitlist();
   }
 
-
   @override
   void initState() {
     if (_habits == null) _habits = List<Data>();
     updatehabitlist();
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -184,30 +175,8 @@ class _HomeState extends State<Home> {
             fontSize: 30,
           ),
         ),
-        titleSpacing: 0,
-        leading: Icon(Icons.mood),
+        centerTitle: true,
         actions: <Widget>[
-          RawMaterialButton(
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 30,
-            ),
-            onPressed: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => NewHabit(),
-                ),
-              ) as Data;
-              if (result.name != null) {
-                _habits.add(result);
-                savehabit(result);
-              }
-              setState(() {});
-            },
-            constraints: BoxConstraints(maxWidth: 50),
-          ),
           RawMaterialButton(
             child: Icon(
               Icons.settings,
@@ -261,6 +230,29 @@ class _HomeState extends State<Home> {
             ),
             habitList(),
           ],
+        ),
+      ),
+      floatingActionButton: Padding(
+        padding: EdgeInsets.all(15),
+        child: FloatingActionButton(
+          onPressed: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => NewHabit(),
+              ),
+            ) as Data;
+            if (result.name != null) {
+              _habits.add(result);
+              savehabit(result);
+            }
+            setState(() {});
+          },
+          child: Icon(
+            Icons.add,
+            size: 30,
+          ),
+          backgroundColor: Theme.of(context).primaryColor,
         ),
       ),
     );

@@ -6,19 +6,21 @@ import 'package:path_provider/path_provider.dart';
 import 'package:soberity_app/database/data.dart';
 
 class DataBaseHelper {
+
   static DataBaseHelper dbhelper;
   static Database db;
 
-  String name = 'name';
-  String cost = 'cost';
-  String money = 'money';
-  String quitdate = 'quitdate';
-  String lastinteraction = 'lastinteraction';
-  String minabstinenceperiod = 'minabstinenceperiod';
-  String maxabstinenceperiod = 'maxabstinenceperiod';
-  String previousabstinenceperiod = 'previousabstinenceperiod';
-  String resets = 'resets';
-  String spent = 'spent';
+  String table = 'habit';
+  String colName = 'name';
+  String colCost = 'cost';
+  String colMoney = 'money';
+  String colQuitdate = 'quitdate';
+  String colLastinteraction = 'lastinteraction';
+  String colMinabstinenceperiod = 'minabstinenceperiod';
+  String colMaxabstinenceperiod = 'maxabstinenceperiod';
+  String colPreviousabstinenceperiod = 'previousabstinenceperiod';
+  String colResets = 'resets';
+  String colSpent = 'spent';
 
   DataBaseHelper.create();
 
@@ -32,14 +34,14 @@ class DataBaseHelper {
 
 Future<Database>  initializedb() async{
 Directory directory =await getApplicationDocumentsDirectory();
-String path=directory.path+'notes.db';
+String path=directory.path+'habits.db';
 
 var habitsDatabase = await openDatabase(path,version:2,onCreate:createDb);
 return habitsDatabase;
   }
 
 void createDb(Database db,int newVersion ) async{
-  await db.execute("CREATE TABLE habits($name TEXT, $cost REAL , $money INTEGER , $quitdate TEXT, $lastinteraction TEXT, $minabstinenceperiod INTEGER, $maxabstinenceperiod INTEGER, $previousabstinenceperiod INTEGER , $resets INTEGER, $spent REAL ) ");
+  await db.execute('CREATE TABLE $table($colName TEXT, $colCost REAL , $colMoney INTEGER , $colQuitdate TEXT, $colLastinteraction TEXT, $colMinabstinenceperiod INTEGER, $colMaxabstinenceperiod INTEGER, $colPreviousabstinenceperiod INTEGER , $colResets INTEGER, $colSpent REAL )');
 }
 
 Future<Database> get database async{
@@ -53,25 +55,25 @@ if(db == null){
 
 Future<List<Map<String,dynamic>>> getMapList() async{
   Database db=await this.database;
-  var result = await db.query('habits');
+  var result = await db.query(table);
   return result;
 }
 
 Future<int> insert(Data data) async{
   Database db= await this.database;
-  var result = await db.insert('habits', data.toMap());
+  var result = await db.insert(table, data.toMap());
   return result;
 }
 
 Future<int> update(Data data) async{
   var db=await this.database;
-  var result = await db.update('habits', data.toMap(),where:'name = ?' ,whereArgs: [data.name]);
+  var result = await db.update(table, data.toMap(),where:'$colName = ?' ,whereArgs: [data.name]);
   return result;
 }
 
 Future<int> delete(String name) async{
   Database db = await this.database;
-  int result= await db.delete('habits',where:'name = ?',whereArgs:[name]);
+  int result= await db.rawDelete('DELETE FROM $table WHERE $colName = $name');
   return result;
 }
 

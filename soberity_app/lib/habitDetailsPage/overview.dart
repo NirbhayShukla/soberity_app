@@ -62,7 +62,7 @@ class _OverviewState extends State<Overview> {
 //To calculate and return current savings
   Widget currentsavings(Data habit) {
     DateTime current = DateTime.now();
-    Duration abstime = current.difference(habit.lastinteraction);
+    Duration abstime = current.difference(DateTime.parse(habit.lastinteraction));
     double currentsavings = abstime.inHours / 24 * habit.cost;
     String result = '';
     if (habit.money == 1)
@@ -79,7 +79,7 @@ class _OverviewState extends State<Overview> {
   Widget alltimesavings(Data habit) {
     String result;
     DateTime current = DateTime.now();
-    Duration abstime = current.difference(habit.lastinteraction);
+    Duration abstime = current.difference(DateTime.parse(habit.lastinteraction));
     double currentsavings = abstime.inHours / 24 * habit.cost;
     if (habit.money == 1)
       result = "₹ " + (habit.spent + currentsavings).toStringAsFixed(0);
@@ -105,17 +105,17 @@ class _OverviewState extends State<Overview> {
 //To modify habit details
   void updatehabit(Data habit) {
     DateTime current = DateTime.now();
-    Duration abstime = current.difference(habit.lastinteraction);
+    Duration abstime = current.difference(DateTime.parse(habit.lastinteraction));
     double currentsaving = abstime.inHours / 24 * habit.cost;
 
     habit.resets = habit.resets + 1;
     habit.spent = habit.spent + currentsaving;
-    habit.previousabstinenceperiod = abstime;
-    habit.lastinteraction = DateTime.now();
-    if (habit.maxabstinenceperiod.compareTo(abstime) < 0)
-      habit.maxabstinenceperiod = abstime;
-    if (habit.minabstinenceperiod.compareTo(abstime) > 0)
-      habit.minabstinenceperiod = abstime;
+    habit.previousabstinenceperiod = abstime.inSeconds;
+    habit.lastinteraction = DateTime.now().toString();
+    if (habit.maxabstinenceperiod.compareTo(abstime.inSeconds) < 0)
+      habit.maxabstinenceperiod = abstime.inSeconds;
+    if (habit.minabstinenceperiod.compareTo(abstime.inSeconds) > 0)
+      habit.minabstinenceperiod = abstime.inSeconds;
   }
 
   @override
@@ -132,7 +132,7 @@ class _OverviewState extends State<Overview> {
       color: Colors.white,
       child: ListView(
         children: <Widget>[
-          progressbar(habit.lastinteraction),
+          progressbar(DateTime.parse(habit.lastinteraction)),
           Padding(
             padding: EdgeInsets.all(10),
           ),
@@ -153,7 +153,7 @@ class _OverviewState extends State<Overview> {
             padding: EdgeInsets.all(5),
           ),
           Center(
-            child: abstinenceTime(habit.lastinteraction),
+            child: abstinenceTime(DateTime.parse(habit.lastinteraction)),
           ),
           borderline(),
           Center(
@@ -195,7 +195,7 @@ class _OverviewState extends State<Overview> {
                 selectedColor: Colors.redAccent),
           ),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.symmetric(vertical: 10,horizontal: 50),
             child: RawMaterialButton(
               constraints: BoxConstraints(minHeight: 50),
               fillColor: Colors.redAccent,
